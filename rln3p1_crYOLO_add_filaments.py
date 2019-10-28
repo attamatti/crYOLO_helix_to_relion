@@ -2,6 +2,7 @@
 
 import sys
 import glob
+import os
 
 def read_parts_file(partsfile,boxdir):
 	n=0
@@ -51,7 +52,16 @@ def read_parts_file(partsfile,boxdir):
 				partcount+=1
 		print(' '.join([i.split('/')[-1],'filament count:',str(fil),'particle count:',str(partcount)]))
 	return(labels,header,data,boxdic)	
-boxdir = sys.argv[2]
+## program
+errmsg = '\nUSAGE: rln3p1_crYOLO_add_filaments <particles file> <boxfiles directory>'
+try:
+	boxdir = sys.argv[2]
+except:
+	sys.exit('\nERROR no particles directoty {0}'.format(errmsg))
+if os.path.isdir(boxdir) == False:
+	sys.exit('\nERROR: {0} is not a vaild boxfiles directory{1}'.format(sys.argv[2],errmsg))
+if os.path.isfile(sys.argv[1]) == False:
+	sys.exit('\nERROR reading particles starfile\n{0} is not a valid star file{1}'.format(sys.argv[1],errmsg))
 labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2])
 output = open('crYOLO_helix_parts.star','w')
 for i in header:
@@ -61,4 +71,3 @@ for i in data:
 	mic = i[labels['_rlnMicrographName']]
 	partid ='{0}{1}'.format(i[labels['_rlnCoordinateX']].split('.')[0],i[labels['_rlnCoordinateY']].split('.')[0])	
 	output.write('\n{0}  {1}'.format('  '.join(i),boxdic[mic][partid]))
-print(boxdic)
