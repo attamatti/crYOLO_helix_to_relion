@@ -188,3 +188,4 @@ for i in data:
 	partid ='{0}{1}'.format(i[labels['_rlnCoordinateX']].split('.')[0],i[labels['_rlnCoordinateY']].split('.')[0])	
 	output.write('\n{0}  {1} {2}'.format('  '.join(i),'  '.join([str(x) for x in boxdic[mic][partid]]),filmeans[boxdic[mic][partid][0]]))
 
+
