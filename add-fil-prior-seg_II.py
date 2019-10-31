@@ -128,9 +128,9 @@ def read_parts_file(partsfile,boxdir):
 		partxy = np.array([float(dat[-1][labels['_rlnCoordinateX']]),float(dat[-1][labels['_rlnCoordinateY']])])
 		npxy = np.array([float(dat[-2][labels['_rlnCoordinateX']]),float(dat[-2][labels['_rlnCoordinateY']])])
 		if (partxy-npxy)[1] < 0:
-			segang = 180+angle_between(partxy-npxy,np.array([1.0,0.0]))
+			segang = (-1*angle_between(partxy-npxy,np.array([1.0,0.0])))+180
 		else:
-			segang = -1*(180-(angle_between(partxy-npxy,np.array([1.0,0.0]))))
+			segang = (angle_between(partxy-npxy,np.array([1.0,0.0])))-180
 		boxdic[mic][partid].append(90.0)
 		fsegang = (segang)
 		boxdic[mic][partid].append(segang)
@@ -138,7 +138,7 @@ def read_parts_file(partsfile,boxdir):
 		print('filament {0}'.format(fil))
 		print('part xy, prevpart xy',partxy,npxy)
 		print('segment vector',partxy-npxy)
-		print('segment angle',segang)
+		print('segment angle',-1*segang,'** last segment reversed')
 		print('final segment angle',fsegang)
 	return(labels,header,data,boxdic)
 
