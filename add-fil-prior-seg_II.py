@@ -69,15 +69,19 @@ def read_parts_file(partsfile,boxdir):
 	### put the particles in groups by filament
 	fils = {}		#{filament:[[dataline],[dataline]]}
 	for i in data:
+		mic = i[labels['_rlnMicrographName']]
 		partid ='{0:0.0f}{1:0.0f}'.format(float(i[labels['_rlnCoordinateX']]),float(i[labels['_rlnCoordinateY']]))	
+		filid = '{0}-{1}'.format(mic,boxdic[i[labels['_rlnMicrographName']]][partid][0])
 		try:
-			fils[boxdic[i[labels['_rlnMicrographName']]][partid][0]].append(i)
+			fils[filid].append(i)
 		except:
-			fils[boxdic[i[labels['_rlnMicrographName']]][partid][0]]= [i]
+			fils[filid]= [i]
+
 	for fil in fils:
 		dat = fils[fil]
 		## do first segment
 		partid ='{0:0.0f}{1:0.0f}'.format(float(dat[0][labels['_rlnCoordinateX']]),float(dat[0][labels['_rlnCoordinateY']]))
+		mic = dat[0][labels['_rlnMicrographName']]
 		partxy = np.array([float(dat[0][labels['_rlnCoordinateX']]),float(dat[0][labels['_rlnCoordinateY']])])
 		npxy = np.array([float(dat[1][labels['_rlnCoordinateX']]),float(dat[1][labels['_rlnCoordinateY']])])
 		if (partxy-npxy)[1] < 0:
@@ -87,8 +91,8 @@ def read_parts_file(partsfile,boxdir):
 		boxdic[mic][partid].append(90.0)
 		fsegang = (segang)
 		boxdic[mic][partid].append(segang)
-		print('\nfil position: 0')
-		print('filament {0}'.format(fil))
+		print('\nfilament {0}'.format(fil))
+		print('fil position: 0 {0}'.format(mic))
 		print('part xy, nextpart xy',partxy,npxy)
 		print('segment vector',partxy-npxy)
 		print('segment angle',segang)
@@ -98,6 +102,7 @@ def read_parts_file(partsfile,boxdir):
 		## do 2nd through -1th segments
 		n=1
 		for i in dat[1:-1]:
+			mic = i[labels['_rlnMicrographName']]
 			partid ='{0:0.0f}{1:0.0f}'.format(float(i[labels['_rlnCoordinateX']]),float(i[labels['_rlnCoordinateY']]))
 			partxy = np.array([float(i[labels['_rlnCoordinateX']]),float(i[labels['_rlnCoordinateY']])])
 			npxy = np.array([float(dat[n+1][labels['_rlnCoordinateX']]),float(dat[n+1][labels['_rlnCoordinateY']])])
@@ -113,8 +118,8 @@ def read_parts_file(partsfile,boxdir):
 			boxdic[mic][partid].append(90.0)
 			fsegang = np.mean([segang,psegang])
 			boxdic[mic][partid].append(fsegang)
-			print('\nfil position: {0}'.format(n))
-			print('filament {0}'.format(fil))
+			print('\nfilament {0}'.format(fil))
+			print('fil position: {0} {1}'.format(n,mic))
 			print('part xy, nextpart xy',partxy,npxy)
 			print('segment vector',partxy-npxy)
 			print('segment angle',segang)
@@ -124,18 +129,19 @@ def read_parts_file(partsfile,boxdir):
 			n+=1
 
 		## do last segment
+		mic = dat[-1][labels['_rlnMicrographName']]
 		partid ='{0:0.0f}{1:0.0f}'.format(float(dat[-1][labels['_rlnCoordinateX']]),float(dat[-1][labels['_rlnCoordinateY']]))
 		partxy = np.array([float(dat[-1][labels['_rlnCoordinateX']]),float(dat[-1][labels['_rlnCoordinateY']])])
 		npxy = np.array([float(dat[-2][labels['_rlnCoordinateX']]),float(dat[-2][labels['_rlnCoordinateY']])])
 		if (partxy-npxy)[1] < 0:
-			segang = (-1*angle_between(partxy-npxy,np.array([1.0,0.0])))+180
+			segang = 180-(-1*angle_between(partxy-npxy,np.array([1.0,0.0])))
 		else:
-			segang = (angle_between(partxy-npxy,np.array([1.0,0.0])))-180
+			segang = -(180-(angle_between(partxy-npxy,np.array([1.0,0.0]))))
 		boxdic[mic][partid].append(90.0)
 		fsegang = (segang)
 		boxdic[mic][partid].append(segang)
-		print('\nfil position: {0}'.format(n))
-		print('filament {0}'.format(fil))
+		print('\nfilament {0}'.format(fil))
+		print('fil position: {0} {1}'.format(n,mic))
 		print('part xy, prevpart xy',partxy,npxy)
 		print('segment vector',partxy-npxy)
 		print('segment angle',-1*segang,'** last segment reversed')
