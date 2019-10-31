@@ -117,7 +117,6 @@ def read_parts_file(partsfile,boxdir):
 			npxy = np.array([float(dat[n+1][labels['_rlnCoordinateX']]),float(dat[n+1][labels['_rlnCoordinateY']])])
 			ppxy = np.array([float(dat[n-1][labels['_rlnCoordinateX']]),float(dat[n-1][labels['_rlnCoordinateY']])])
 			angtonext = angle_between(partxy,npxy)
-			boxdic[mic][partid].append(90.0)
 			if (partxy-npxy)[1] < 0:
 				segang = -1*(angle_between(partxy-npxy,np.array([1.0,0.0])))
 				psegang = -1*(angle_between(ppxy-partxy,np.array([1.0,0.0])))
