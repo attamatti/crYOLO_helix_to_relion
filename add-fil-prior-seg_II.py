@@ -134,7 +134,7 @@ def read_parts_file(partsfile,boxdir):
 		boxdic[mic][partid].append(90.0)
 		fsegang = (segang)
 		boxdic[mic][partid].append(segang)
-		print('\nfil position: {0}'.format(n+1))
+		print('\nfil position: {0}'.format(n))
 		print('filament {0}'.format(fil))
 		print('part xy, prevpart xy',partxy,npxy)
 		print('segment vector',partxy-npxy)
