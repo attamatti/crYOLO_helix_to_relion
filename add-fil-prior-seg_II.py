@@ -14,38 +14,6 @@ def angle_between(v1, v2):
     return(np.degrees(np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))))
 
  
-def fit_line(points,position):
-	'''verticies of right triangle = xo,yo, x0,y+1, xn,y+1 '''
-	xs = [x[0] for x in points]
-	ys = [x[1] for x in points]
-	poly = np.polyfit(xs,ys,1)
-	ox,oy = points[position][0],points[position][1]
-	
-	if poly[0] >=-0.01:
-		trivert2 = (((oy+1)-poly[1])/poly[0],oy+1)
-		trivert1 = (ox,oy+1)
-	else:
-		trivert2 = (((oy-1)-poly[1])/poly[0],oy-1)
-		trivert1 = (ox,oy-1)
-	print('point: ({0},{1})'.format(ox,oy))
-	print('position: {0}'.format(position))
-	print('right triangle verticies ({0},{1}){2} {3}'.format(ox,oy,trivert1,trivert2))
-	print('fit = y={0}x+{1}'.format(poly[0],poly[1]))
-	opplength = np.abs(trivert1[0]-trivert2[0])+np.abs(trivert1[1]-trivert2[1])
-	hyplength = np.abs(ox-trivert2[0])+np.abs(oy-trivert2[1])
-	sin_alpha = opplength/hyplength
-	alpha = np.degrees(np.arcsin(sin_alpha))  
-	print('oppo length: {0}'.format(opplength))
-	print('hypot length: {0}'.format(hyplength))
-	
-	if poly[0] >= 0:
-		alpha = (90-alpha)
-	elif poly[0] < 0:
-		alpha = (alpha-90)
-	print('alpha: {0:.4f}'.format(alpha))
-	return(alpha)
-
-	
 def read_parts_file(partsfile,boxdir):
 ### read the star file
 	n=0
@@ -108,10 +76,28 @@ def read_parts_file(partsfile,boxdir):
 			fils[boxdic[i[labels['_rlnMicrographName']]][partid][0]]= [i]
 	for fil in fils:
 		dat = fils[fil]
-		## do 0th through -4th segments
+		## do first segment
+		partid ='{0:0.0f}{1:0.0f}'.format(float(dat[0][labels['_rlnCoordinateX']]),float(dat[0][labels['_rlnCoordinateY']]))
+		partxy = np.array([float(dat[0][labels['_rlnCoordinateX']]),float(dat[0][labels['_rlnCoordinateY']])])
+		npxy = np.array([float(dat[1][labels['_rlnCoordinateX']]),float(dat[1][labels['_rlnCoordinateY']])])
+		if (partxy-npxy)[1] < 0:
+			segang = -1*(angle_between(partxy-npxy,np.array([1.0,0.0])))
+		else:
+			segang = angle_between(partxy-npxy,np.array([1.0,0.0]))
+		boxdic[mic][partid].append(90.0)
+		fsegang = (segang)
+		boxdic[mic][partid].append(segang)
+		print('\nfil position: 0')
+		print('filament {0}'.format(fil))
+		print('part xy, nextpart xy',partxy,npxy)
+		print('segment vector',partxy-npxy)
+		print('segment angle',segang)
+		print('final segment angle',fsegang)
+
+			
+		## do 2nd through -1th segments
 		n=1
 		for i in dat[1:-1]:
-
 			partid ='{0:0.0f}{1:0.0f}'.format(float(i[labels['_rlnCoordinateX']]),float(i[labels['_rlnCoordinateY']]))
 			partxy = np.array([float(i[labels['_rlnCoordinateX']]),float(i[labels['_rlnCoordinateY']])])
 			npxy = np.array([float(dat[n+1][labels['_rlnCoordinateX']]),float(dat[n+1][labels['_rlnCoordinateY']])])
@@ -137,12 +123,23 @@ def read_parts_file(partsfile,boxdir):
 			print('bend',bend)
 			n+=1
 
-
-
-
-
-
-
+		## do last segment
+		partid ='{0:0.0f}{1:0.0f}'.format(float(dat[-1][labels['_rlnCoordinateX']]),float(dat[-1][labels['_rlnCoordinateY']]))
+		partxy = np.array([float(dat[-1][labels['_rlnCoordinateX']]),float(dat[-1][labels['_rlnCoordinateY']])])
+		npxy = np.array([float(dat[-2][labels['_rlnCoordinateX']]),float(dat[-2][labels['_rlnCoordinateY']])])
+		if (partxy-npxy)[1] < 0:
+			segang = 180+angle_between(partxy-npxy,np.array([1.0,0.0]))
+		else:
+			segang = -1*(180-(angle_between(partxy-npxy,np.array([1.0,0.0]))))
+		boxdic[mic][partid].append(90.0)
+		fsegang = (segang)
+		boxdic[mic][partid].append(segang)
+		print('\nfil position: 0')
+		print('filament {0}'.format(fil))
+		print('part xy, prevpart xy',partxy,npxy)
+		print('segment vector',partxy-npxy)
+		print('segment angle',segang)
+		print('final segment angle',fsegang)
 	return(labels,header,data,boxdic)
 
 
