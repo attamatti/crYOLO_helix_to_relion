@@ -1,9 +1,9 @@
 Convert the EMAN format boxes from crYOLO to relion format while preserving the helical tube IDs for angular priors
 
 Instructions:
-1) run crYOLO_helix_box.star 
-	USAGE: crYOLO_helix_box.star <crYOLO boxfile dir>
-	Note the crYOLO boxfile dir needs to have the same name as the raw data dir
+1) run rln_crYOLO_helix_box.star 
+	USAGE: rln_crYOLO_helix_box.star <crYOLO boxfile dir>
+	Note the crYOLO boxfile dir needs to have the same name as the dir with your raw data
 
 2) Use relion to extract the segments as single particles (not helical segments)
 	use the extract function with coords_suffix_YOLObox.box (which is 1 dir up from the crYOLO bosfile dir) as the particles' coordinates 
