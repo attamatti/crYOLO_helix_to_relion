@@ -23,7 +23,7 @@ def read_yolobox(boxfile):
 			if i.split()[0] == '#helix:':
 				boxsize = int(i.split(',')[-1])
 			elif '#' not in i:
-				outbox.write('{0:0.0f} {1:0.0f} {2} {2}\n'.format(float(i.split()[0]),float(i.split()[1]),boxsize))
+				outbox.write('{0:0.0f} {1:0.0f} {2} {2}\n'.format(float(i.split()[0])-(0.5*boxsize),float(i.split()[1])-(0.5*boxsize),boxsize))
 		outbox.close()
 		return(0,1)
 	else:

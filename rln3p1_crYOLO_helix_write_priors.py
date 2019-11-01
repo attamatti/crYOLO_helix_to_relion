@@ -60,7 +60,7 @@ def read_parts_file(partsfile,boxdir):
 				fil+=1 
 				box = float(line.split(',')[-1])
 			elif '#' not in line:
-				partid ='{0:0.0f}{1:0.0f}'.format(float(line.split()[0])+(0.5*box),float(line.split()[1])+(0.5*box))	
+				partid ='{0:0.0f}{1:0.0f}'.format(float(line.split()[0]),float(line.split()[1]))	
 				boxdic[i][partid] = [fil]
 				partcount+=1
 		print(' '.join([i.split('/')[-1],'filament count:',str(fil),'particle count:',str(partcount)]))
