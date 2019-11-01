@@ -85,9 +85,9 @@ def read_parts_file(partsfile,boxdir):
 		partxy = np.array([float(dat[0][labels['_rlnCoordinateX']]),float(dat[0][labels['_rlnCoordinateY']])])
 		npxy = np.array([float(dat[1][labels['_rlnCoordinateX']]),float(dat[1][labels['_rlnCoordinateY']])])
 		if (partxy-npxy)[1] < 0:
-			segang = -1*(angle_between(partxy-npxy,np.array([0.0,1.0])))
+			segang = -1*(angle_between(partxy-npxy,np.array([1.0,0.0])))
 		else:
-			segang = angle_between(partxy-npxy,np.array([0.0,1.0]))
+			segang = angle_between(partxy-npxy,np.array([1.0,0.0]))
 		boxdic[mic][partid].append(90.0)
 		fsegang = (segang)
 		boxdic[mic][partid].append(segang)
@@ -109,11 +109,11 @@ def read_parts_file(partsfile,boxdir):
 			ppxy = np.array([float(dat[n-1][labels['_rlnCoordinateX']]),float(dat[n-1][labels['_rlnCoordinateY']])])
 			angtonext = angle_between(partxy,npxy)
 			if (partxy-npxy)[1] < 0:
-				segang = -1*(angle_between(partxy-npxy,np.array([0.0,1.0])))
-				psegang = -1*(angle_between(ppxy-partxy,np.array([0.0,1.0])))
+				segang = -1*(angle_between(partxy-npxy,np.array([1.0,0.0])))
+				psegang = -1*(angle_between(ppxy-partxy,np.array([1.0,0.0])))
 			else:
-				segang = angle_between(partxy-npxy,np.array([0.0,1.0]))
-				psegang = angle_between(ppxy-partxy,np.array([0.0,1.0]))
+				segang = angle_between(partxy-npxy,np.array([1.0,0.0]))
+				psegang = angle_between(ppxy-partxy,np.array([1.0,0.0]))
 			bend = abs(abs(segang)-abs(psegang))	
 			boxdic[mic][partid].append(90.0)
 			fsegang = np.mean([segang,psegang])
@@ -134,9 +134,9 @@ def read_parts_file(partsfile,boxdir):
 		partxy = np.array([float(dat[-1][labels['_rlnCoordinateX']]),float(dat[-1][labels['_rlnCoordinateY']])])
 		npxy = np.array([float(dat[-2][labels['_rlnCoordinateX']]),float(dat[-2][labels['_rlnCoordinateY']])])
 		if (partxy-npxy)[1] < 0:
-			segang = 180-(-1*angle_between(partxy-npxy,np.array([0.0,1.0])))
+			segang = 180-(-1*angle_between(partxy-npxy,np.array([1.0,0.0])))
 		else:
-			segang = -(180-(angle_between(partxy-npxy,np.array([0.0,1.0]))))
+			segang = -(180-(angle_between(partxy-npxy,np.array([1.0,0.0]))))
 		boxdic[mic][partid].append(90.0)
 		fsegang = (segang)
 		boxdic[mic][partid].append(segang)
