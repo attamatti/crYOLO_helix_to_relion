@@ -14,7 +14,7 @@ def angle_between(v1, v2):
     return(np.degrees(np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))))
 
  
-def read_parts_file(partsfile,boxdir):
+def read_parts_file(partsfile,boxdir,overlap):
 ### read the star file
 	inhead = True
 	alldata = open(partsfile,'r').readlines()
@@ -79,6 +79,7 @@ def read_parts_file(partsfile,boxdir):
 			fils[filid]= [i]
 
 	for fil in fils:
+		plength = 0
 		dat = fils[fil]
 		## do first segment
 		partid ='{0:0.0f}{1:0.0f}'.format(float(dat[0][labels['_rlnCoordinateX']]),float(dat[0][labels['_rlnCoordinateY']]))
@@ -90,6 +91,9 @@ def read_parts_file(partsfile,boxdir):
 		else:
 			segang = -(angle_between(partxy-npxy,np.array([1.0,0.0])))
 		boxdic[mic][partid].append(90.0)
+		boxdic[mic][partid].append(0.500)
+		boxdic[mic][partid].append(0.500)
+		boxdic[mic][partid].append(plength)
 		fsegang = (segang)
 		boxdic[mic][partid].append(segang)
 		print('\nfilament {0}'.format(fil))
@@ -103,6 +107,7 @@ def read_parts_file(partsfile,boxdir):
 		## do 2nd through -1th segments
 		n=1
 		for i in dat[1:-1]:
+			plength += overlap
 			mic = i[labels['_rlnMicrographName']]
 			partid ='{0:0.0f}{1:0.0f}'.format(float(i[labels['_rlnCoordinateX']]),float(i[labels['_rlnCoordinateY']]))
 			partxy = np.array([float(i[labels['_rlnCoordinateX']]),float(i[labels['_rlnCoordinateY']])])
@@ -117,6 +122,9 @@ def read_parts_file(partsfile,boxdir):
 				psegang = -180-(angle_between(ppxy-partxy,np.array([1.0,0.0])))
 			bend = abs(abs(segang)-abs(psegang))	
 			boxdic[mic][partid].append(90.0)
+			boxdic[mic][partid].append(0.500)
+			boxdic[mic][partid].append(0.500)
+			boxdic[mic][partid].append(plength)
 			fsegang = np.mean([segang,psegang])
 			boxdic[mic][partid].append(fsegang)
 			print('\nfilament {0}'.format(fil))
@@ -130,6 +138,7 @@ def read_parts_file(partsfile,boxdir):
 			n+=1
 
 		## do last segment
+		plength += overlap
 		mic = dat[-1][labels['_rlnMicrographName']]
 		partid ='{0:0.0f}{1:0.0f}'.format(float(dat[-1][labels['_rlnCoordinateX']]),float(dat[-1][labels['_rlnCoordinateY']]))
 		partxy = np.array([float(dat[-1][labels['_rlnCoordinateX']]),float(dat[-1][labels['_rlnCoordinateY']])])
@@ -139,6 +148,9 @@ def read_parts_file(partsfile,boxdir):
 		else:
 			segang = -(angle_between(partxy-npxy,np.array([1.0,0.0])))
 		boxdic[mic][partid].append(90.0)
+		boxdic[mic][partid].append(0.500)
+		boxdic[mic][partid].append(0.500)
+		boxdic[mic][partid].append(plength)
 		fsegang = (segang)
 		boxdic[mic][partid].append(segang)
 		print('\nfilament {0}'.format(fil))
@@ -153,7 +165,7 @@ def read_parts_file(partsfile,boxdir):
 
 
 ## program
-errmsg = '\nUSAGE: rln3p1_crYOLO_add_filaments <particles file> <boxfiles directory>'
+errmsg = '\nUSAGE: rln3p1_crYOLO_add_filaments <particles file> <boxfiles directory> <overlap in pixels> <a/pix>'
 try:
 	boxdir = sys.argv[2]
 except:
@@ -163,10 +175,13 @@ if os.path.isdir(boxdir) == False:
 if os.path.isfile(sys.argv[1]) == False:
 	sys.exit('\nERROR reading particles starfile\n{0} is not a valid star file{1}'.format(sys.argv[1],errmsg))
 
+try:
+	overlap = float(sys.argv[3])
+	apix = float(sys.argv[4])
+	print('overlap: {0} px @ {1} a/pix = {2} angstrom'.format(overlap,apix,overlap*apix)
 
 
-
-labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2])
+labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2],overlap)
 
 output = open('crYOLO_helix_parts.star','w')
 for i in header:
@@ -174,6 +189,8 @@ for i in header:
 output.write('_rlnHelicalTubeID #{0}\n'.format(int(header[-1].split('#')[-1])+1))
 output.write('_rlnAngleTiltPrior #{0}\n'.format(int(header[-1].split('#')[-1])+2))
 output.write('_rlnAnglePsiPrior #{0}\n'.format(int(header[-1].split('#')[-1])+3))
+output.write('_rlnAngleRotFlipRatio #{0}\n'.format(int(header[-1].split('#')[-1])+4))
+output.write('_rlnAnglePsiFlipRatio #{0}\n'.format(int(header[-1].split('#')[-1])+5))
 
 for i in data:
 	mic = i[labels['_rlnMicrographName']]
