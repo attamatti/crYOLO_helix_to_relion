@@ -14,7 +14,7 @@ def angle_between(v1, v2):
     return(np.degrees(np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))))
 
  
-def read_parts_file(partsfile,boxdir):
+def read_parts_file(partsfile,boxdir,overlap):
 ### read the star file
 	n=0
 	pd = open(partsfile,'r').readlines()
