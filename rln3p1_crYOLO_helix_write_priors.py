@@ -164,7 +164,7 @@ def read_parts_file(partsfile,boxdir):
 
 
 ## program
-errmsg = '\nUSAGE: rln3p1_crYOLO_add_filaments <particles file> <boxfiles directory> <overlap in pixels> <a/pix>'
+errmsg = '\nUSAGE: rln3p1_crYOLO_add_filaments <particles file> <boxfiles directory> <overlap in pixels> <A/pix>'
 try:
 	boxdir = sys.argv[2]
 except:
@@ -178,7 +178,8 @@ try:
 	overlap = float(sys.argv[3])
 	apix = float(sys.argv[4])
 	print('overlap: {0} px @ {1} a/pix = {2} angstrom'.format(overlap,apix,overlap*apix))
-
+except:
+	sys.exit('ERROR: incorrect overlap (px) or A/pix\n{0}'.format(errmsg))
 
 labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2],overlap)
 
