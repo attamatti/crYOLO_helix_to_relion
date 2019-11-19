@@ -177,7 +177,7 @@ if os.path.isfile(sys.argv[1]) == False:
 try:
 	overlap = float(sys.argv[3])
 	apix = float(sys.argv[4])
-	print('overlap: {0} px @ {1} a/pix = {2} angstrom'.format(overlap,apix,overlap*apix)
+	print('overlap: {0} px @ {1} a/pix = {2} angstrom'.format(overlap,apix,overlap*apix))
 
 
 labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2],overlap)
