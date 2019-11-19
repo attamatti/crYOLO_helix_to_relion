@@ -181,16 +181,18 @@ try:
 except:
 	sys.exit('ERROR: incorrect overlap (px) or A/pix\n{0}'.format(errmsg))
 
-labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2],overlap)
+labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2],overlap*apix)
 
 output = open('crYOLO_helix_parts.star','w')
 for i in header:
 	output.write(i)
 output.write('_rlnHelicalTubeID #{0}\n'.format(int(header[-1].split('#')[-1])+1))
 output.write('_rlnAngleTiltPrior #{0}\n'.format(int(header[-1].split('#')[-1])+2))
-output.write('_rlnAnglePsiPrior #{0}\n'.format(int(header[-1].split('#')[-1])+3))
-output.write('_rlnAngleRotFlipRatio #{0}\n'.format(int(header[-1].split('#')[-1])+4))
-output.write('_rlnAnglePsiFlipRatio #{0}\n'.format(int(header[-1].split('#')[-1])+5))
+output.write('_rlnAngleRotFlipRatio #{0}\n'.format(int(header[-1].split('#')[-1])+3))
+output.write('_rlnAnglePsiFlipRatio #{0}\n'.format(int(header[-1].split('#')[-1])+4))
+output.write('_rlnHelicalTrackLengthAngst #{0}\n'.format(int(header[-1].split('#')[-1])+5))
+output.write('_rlnAnglePsiPrior #{0}\n'.format(int(header[-1].split('#')[-1])+6))
+
 
 for i in data:
 	mic = i[labels['_rlnMicrographName']]
