@@ -179,7 +179,8 @@ try:
 	overlap = float(sys.argv[3])
 	apix = float(sys.argv[4])
 	print('overlap: {0} px @ {1} a/pix = {2} angstrom'.format(overlap,apix,overlap*apix))
-
+except:
+	sys.exit('ERROR: incorrect overlap (px) or A/pix\n{0}'.format(errmsg))
 
 labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2],overlap)
 
