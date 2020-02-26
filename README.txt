@@ -1,7 +1,7 @@
 Convert the EMAN format boxes from crYOLO to relion format while preserving the helical tube IDs for angular priors
 
 Instructions:
-1) run rln_crYOLO_helix_box.star 
+1) run rln_crYOLO_helix_box.py 
 	USAGE: rln_crYOLO_helix_box.star <crYOLO boxfile dir>
 	Note the crYOLO boxfile dir needs to have the same name as the dir with your raw data
 
