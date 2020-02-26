@@ -9,6 +9,6 @@ Instructions:
 	use the extract function with coords_suffix_YOLObox.box (which is 1 dir up from the crYOLO bosfile dir) as the particles' coordinates 
 
 3) run rln3p1_crYOLO_helix_write_priors.py to add the helical tube IDs, psi priors, and helical track lengths to the particles file
-	USAGE: rln3p1_crYOLO_helix_write_priors.py <extracted paricles star file> <crYOLO boxfile dir>
+	USAGE: rln3p1_crYOLO_helix_write_priors.py <extracted paricles star file> <crYOLO boxfile dir> <amout of overalp Angstrom> <px size Angstrom> 
 
 4) Buy Matt some cake and give an acknowledgement in your paper 
