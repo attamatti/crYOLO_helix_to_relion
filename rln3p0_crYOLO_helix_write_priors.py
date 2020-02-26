@@ -61,7 +61,7 @@ def read_parts_file(partsfile,boxdir,overlap):
 				fil+=1 
 				box = float(line.split(',')[-1])
 			elif '#' not in line:
-				partid ='{0:0.0f}{1:0.0f}'.format(float(line.split()[0]),float(line.split()[1]))	
+               			partid ='{0:0.0f}{1:0.0f}'.format(float(line.split()[0])+(0.5*boxsize),float(line.split()[1])+(0.5*boxsize))    
 				boxdic[i][partid] = [fil]
 				partcount+=1
 		print(' '.join([i.split('/')[-1],'filament count:',str(fil),'particle count:',str(partcount)]))
@@ -165,7 +165,7 @@ def read_parts_file(partsfile,boxdir,overlap):
 
 
 ## program
-errmsg = '\nUSAGE: rln3p1_crYOLO_add_filaments <particles file> <boxfiles directory> <overlap in pixels> <a/pix>'
+errmsg = '\nUSAGE: rln3p1_crYOLO_add_filaments <particles file> <boxfiles directory> <overlap in pixels> <a/pix> <boxsize px>'
 try:
 	boxdir = sys.argv[2]
 except:
@@ -178,9 +178,10 @@ if os.path.isfile(sys.argv[1]) == False:
 try:
 	overlap = float(sys.argv[3])
 	apix = float(sys.argv[4])
-	print('overlap: {0} px @ {1} a/pix = {2} angstrom'.format(overlap,apix,overlap*apix))
+	boxsize = float(sys.argv[5])
+	print('overlap: {0} px @ {1} a/pix = {2} angstrom boxsize: {3} px'.format(overlap,apix,overlap*apix,boxsize))
 except:
-	sys.exit('ERROR: incorrect overlap (px) or A/pix\n{0}'.format(errmsg))
+	sys.exit('ERROR: incorrect overlap (px) or A/pix, or boxsize\n{0}'.format(errmsg))
 
 labels,header,data,boxdic = read_parts_file(sys.argv[1],sys.argv[2],overlap)
 
