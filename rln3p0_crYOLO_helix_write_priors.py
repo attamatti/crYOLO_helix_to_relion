@@ -18,25 +18,26 @@ def read_parts_file(partsfile,boxdir,overlap):
 ### read the star file
 	inhead = True
 	alldata = open(partsfile,'r').readlines()
-	labelsdic = {}
+	labels = {}
 	data = []
 	header = []
 	count = 0
 	labcount = 0
 	for i in alldata:
 		if '_rln' in i and '#' in i:
-		labelsdic[i.split('#')[0]] = labcount
-		labcount+=1
+			labels[i.split('#')[0].replace(' ','')] = labcount
+			labcount+=1
 		if inhead == True:
 			header.append(i.strip("\n"))
-		if '_rln' in i and '#' in i and  '_rln' not in alldata[count+1] and '#' not in alldata[count+1]:
-			inhead = False
-		elif len(i.split())>=1:
+		
+		if inhead == False  and len(i.split())>=2:
 			data.append(i.split())
+		if '_rln' in i and '#' in i and  '_rln' not in alldata[count+1] and '#' not in alldata[count+1]:
+			inhead = False	
 		count +=1
 	mics = {} 		# {micrograph:[particle,particle,paticle]}
 
-
+	print(labels)
 
 ### get all the micrographs/particles that need to be analysed	assign particles to micrographs
 	for i in data:
@@ -61,7 +62,7 @@ def read_parts_file(partsfile,boxdir,overlap):
 				fil+=1 
 				box = float(line.split(',')[-1])
 			elif '#' not in line:
-               			partid ='{0:0.0f}{1:0.0f}'.format(float(line.split()[0])+(0.5*boxsize),float(line.split()[1])+(0.5*boxsize))    
+				partid ='{0:0.0f}{1:0.0f}'.format(float(line.split()[0])+(0.5*boxsize),float(line.split()[1])+(0.5*boxsize))    
 				boxdic[i][partid] = [fil]
 				partcount+=1
 		print(' '.join([i.split('/')[-1],'filament count:',str(fil),'particle count:',str(partcount)]))
